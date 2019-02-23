@@ -4,10 +4,11 @@ package Game;
 import GameEngine.GameState.State;
 import GameEngine.Graphics.BufferedImageLoader;
 import GamePanel.GameData;
-import GamePanel.PanelItem;
+import GamePanel.IntegerPanelItem;
 import Model.Asteroid;
 import Model.Bullet;
 import Model.Ship;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 
 public class Controller {
     
-    private Mode mode = Mode.timer;
+    private Mode mode;
     //
     private float timer;
     //
@@ -28,27 +29,24 @@ public class Controller {
     //
     private BufferedImage space;
     //
-    private int lives;
-    private int score;
-    private int highScore;
     
-    private PanelItem livesLabel, scoreLabel, highScoreLabel;
+    private IntegerPanelItem lives, score, highScore;
     
     public Controller(Game game) {
         this.game = game;
         
-        livesLabel = new PanelItem("Lives", "3");
-        scoreLabel = new PanelItem("Score", "0");
-        highScoreLabel = new PanelItem("High Score", "0");
+        lives = new IntegerPanelItem("Lives", 3);
+        score = new IntegerPanelItem("Score", 0);
+        highScore = new IntegerPanelItem("High Score", 0);
         
         game.addGamePanel(new GameData() {
             @Override
             public void initiate() {
-                addItem(livesLabel);
-                addItem(scoreLabel);
-                addItem(highScoreLabel);
+                addItem(lives);
+                addItem(score);
+                addItem(highScore);
             }
-        });
+        }, Color.black, Color.white, Color.cyan, 17);
         
         ship = new Ship(game);
         
@@ -61,25 +59,20 @@ public class Controller {
         
     }
     
-    public void reset() {
+    public void reset(Mode mode) {
+        
+        this.mode = mode;
         
         ship.resetPosition();
         
         bullets = new ArrayList<>();
         asteroids= new ArrayList<>();
-        /*
-        for(int i=0; i<4; i++)
-            asteroids.add(new Asteroid(game, 50));
-       
-        for(int i=0; i<asteroids.size(); i++) {
-            if(asteroids.get(i)!=null) asteroids.get(i).setPosition();
-        }
-        */
+        
         respawn();
         game.setGameSet(true);
         
-        setLives(3);
-        setScore(0);
+        lives.setValue(3);
+        score.setValue(0);
     }
     
     public void update() {
@@ -135,6 +128,7 @@ public class Controller {
         ship.setAccelerating(false);
         game.setGameSet(false);
         game.setGameStarted(false);
+        game.getPostGameMenu().setTitle("Score = " + Integer.toString(score.getValue()));
         game.setState(State.postGame);
     }
     
@@ -190,31 +184,20 @@ public class Controller {
         return asteroids;
     }
     
-    public void setScore(int score) {
-        this.score = score;
-        scoreLabel.setData(Integer.toString(score));
-        
-        if(score > highScore) {
-            highScore = score;
-            highScoreLabel.setData(Integer.toString(score));
-        }
-    }
-    
-    public void setLives(int lives) {
-        this.lives = lives;
-        livesLabel.setData(Integer.toString(lives));
+    public void setMode(Mode mode) {
+        this.mode = mode;
     }
 
-    public int getLives() {
+    public IntegerPanelItem getLives() {
         return lives;
     }
 
-    public int getScore() {
+    public IntegerPanelItem getScore() {
         return score;
     }
 
-    public void setMode(Mode mode) {
-        this.mode = mode;
+    public IntegerPanelItem getHighScore() {
+        return highScore;
     }
     
 }

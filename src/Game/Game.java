@@ -2,6 +2,9 @@
 package Game;
 
 import GameEngine.AbstractGame;
+import GameMenus.PauseMenu;
+import GameMenus.PostGameMenu;
+import GameMenus.StartMenu;
 import Resources.Resources;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
@@ -16,6 +19,11 @@ public class Game extends AbstractGame {
     //
     private boolean gameStarted;
     private boolean gameSet;
+    //
+    private Mode mode = Mode.relaxed;
+    //
+    private PostGameMenu postGameMenu;
+    //
     
     public Game(int width, int height, float scale) {
         super(width, height, scale);
@@ -26,6 +34,7 @@ public class Game extends AbstractGame {
         
         setResizable(false);
         setDebugInfoDisplayed(false);
+        setPausable(true);
         
         resources = new Resources();
         controller = new Controller(this);
@@ -33,18 +42,17 @@ public class Game extends AbstractGame {
         gameStarted = false;
         gameSet = false;
         
-        controller.reset();
+        postGameMenu = new PostGameMenu(this);
+        
+        setStartMenu(new StartMenu(this));
+        setPauseMenu(new PauseMenu(this));
+        setPostGameMenu(postGameMenu);
+        
     }
 
     @Override
     public void update() {
-        
-        if(!gameStarted) {          
-            if(getInput().isKeyUp(KeyEvent.VK_SPACE)) 
-                gameStarted = true;        
-        }
-        else 
-            controller.update();
+        controller.update();
     }
 
     @Override
@@ -56,10 +64,11 @@ public class Game extends AbstractGame {
     
     @Override
     public void reset() {
-        controller.reset();
+        controller.reset(mode);
         while(!gameSet) {
                         
         }
+        gameStarted = true;
     }
 
     public Controller getController() {
@@ -77,8 +86,9 @@ public class Game extends AbstractGame {
     public Resources getResources() {
         return resources;
     }
-    
-    
-    
+
+    public void setMode(Mode mode) {
+        this.mode = mode;
+    }
     
 }

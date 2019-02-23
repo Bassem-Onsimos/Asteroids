@@ -208,9 +208,9 @@ public class Asteroid {
         }
         
         if(intersects(game.getController().getShip().getRotatedBounds())){
-            game.getController().setLives(game.getController().getLives() - 1);
+            game.getController().getLives().setValue(game.getController().getLives().getValue() - 1);
             
-            if(game.getController().getLives() > 0) {
+            if(game.getController().getLives().getValue() > 0) {
                 game.getController().retry();
             }
             else {
@@ -236,7 +236,10 @@ public class Asteroid {
                 game.getController().addAsteroid(new Asteroid(game, radius - 15, (float)(rotationAngle + PI/2.0f), x, y));
             }  
 
-            game.getController().setScore(game.getController().getScore() + 100);
+            game.getController().getScore().setValue(game.getController().getScore().getValue() + 100);
+            
+            if(game.getController().getScore().getValue() > game.getController().getHighScore().getValue())
+                game.getController().getHighScore().setValue(game.getController().getScore().getValue());
             
             exploded = true;
         }
