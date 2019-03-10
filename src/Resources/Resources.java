@@ -4,8 +4,6 @@ package Resources;
 import GameEngine.Graphics.BufferedImageLoader;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Resources {
     
@@ -35,7 +33,7 @@ public class Resources {
     public BufferedImage getExplosionSprite() {       
         if(explosion==null) {
             try {
-                explosion = loader.loadImage("/img/explosion2.png");
+                explosion = loader.loadImage("/img/explosion.png");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -57,7 +55,7 @@ public class Resources {
     public BufferedImage getShipImage() {       
         if(ship==null) {
             try {
-                ship = loader.loadImage("/img/ship1.png");
+                ship = loader.loadImage("/img/ship.png");
             } catch (IOException e) {
                 e.printStackTrace();
             }
